@@ -1,101 +1,168 @@
 import { useState } from 'react'
-import { useAuth } from '../hooks/useAuth'
-import Button from '../components/ui/Button'
-import Input from '../components/ui/Input'
-import Card, { CardContent } from '../components/ui/Card'
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Stack,
+  IconButton,
+  InputAdornment,
+  Link as MuiLink,
+  Paper,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Link } from "react-router-dom";
+import { useAuth } from '../hooks/useAuth';
+
+function Logo() {
+  return (
+    <Box mb={2} display="flex" justifyContent="center">
+      <Box
+        sx={{
+          width: 48,
+          height: 48,
+          borderRadius: "12px",
+          background: "#222",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 32,
+          color: "#fff",
+        }}
+      >
+        {/* Replace with your actual logo */}
+        <span>csdsd</span>
+      </Box>
+    </Box>
+  );
+}
 
 export default function Login() {
-  const { signIn, signUp } = useAuth()
-  const [loading, setLoading] = useState(false)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isSignUp, setIsSignUp] = useState(false)
-  const [message, setMessage] = useState('')
+  const { signIn, signUp } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleAuth = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setMessage('')
-
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
     try {
-      const { error } = isSignUp 
+      const { error } = isSignUp
         ? await signUp(email, password)
-        : await signIn(email, password)
-        
-      if (error) throw error
-      
+        : await signIn(email, password);
+      if (error) throw error;
       if (isSignUp) {
-        setMessage('Check your email for the confirmation link!')
+        setMessage('Check your email for the confirmation link!');
       }
     } catch (error) {
-      setMessage(error.message)
+      setMessage(error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-extrabold text-gray-900">
-            {isSignUp ? 'Create your account' : 'Sign in to your account'}
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Ready to study some flashcards? Or at least pretend to?
-          </p>
-        </div>
-        
-        <Card>
-          <CardContent>
-            <form onSubmit={handleAuth} className="space-y-4">
-              <Input
-                label="Email address"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="Enter your email"
-              />
-              
-              <Input
-                label="Password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="Enter your password"
-              />
-
-              {message && (
-                <div className={`text-sm text-center ${
-                  message.includes('Check your email') ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  {message}
-                </div>
-              )}
-
-              <Button
-                type="submit"
-                loading={loading}
-                className="w-full"
+    <Box
+      minHeight="100vh"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      bgcolor="#fafbfc"
+    >
+      <Paper elevation={3} sx={{ p: 4, minWidth: 350, maxWidth: 400 }}>
+        <Logo />
+        <Typography variant="h5" align="center" fontWeight={600} mb={1}>
+          {isSignUp ? 'Sign up' : 'Sign in'}
+        </Typography>
+        <Box component="form" mt={3} onSubmit={handleAuth}>
+          <Stack spacing={2}>
+            <TextField
+              label="Email address"
+              type="email"
+              fullWidth
+              variant="outlined"
+              autoComplete="email"
+              InputProps={{ sx: { borderRadius: 2 } }}
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+            <TextField
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              fullWidth
+              variant="outlined"
+              autoComplete="current-password"
+              InputProps={{
+                sx: { borderRadius: 2 },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword((show) => !show)}
+                      edge="end"
+                      size="small"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+            {message && (
+              <Typography
+                variant="body2"
+                align="center"
+                color={message.includes('Check your email') ? 'success.main' : 'error'}
               >
-                {isSignUp ? 'Sign up' : 'Sign in'}
-              </Button>
-
-              <div className="text-center">
-                <button
-                  type="button"
-                  className="text-blue-600 hover:text-blue-500 text-sm"
-                  onClick={() => setIsSignUp(!isSignUp)}
-                >
-                  {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
-                </button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  )
-} 
+                {message}
+              </Typography>
+            )}
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              fullWidth
+              sx={{ borderRadius: 2, mt: 1, fontWeight: 600 }}
+              disabled={loading}
+            >
+              {loading ? (isSignUp ? 'Signing up...' : 'Signing in...') : (isSignUp ? 'Sign up' : 'Sign in')}
+            </Button>
+          </Stack>
+          <Box mt={2} textAlign="center">
+            <MuiLink
+              component={Link}
+              to="/forgot-password"
+              underline="hover"
+              color="text.secondary"
+              fontSize={14}
+            >
+              Forgot your password?
+            </MuiLink>
+          </Box>
+          <Box mt={4} textAlign="center">
+            <Typography color="text.secondary" fontSize={15}>
+              {isSignUp ? 'Already have an account?' : "Don't have a flashStudy account?"}
+            </Typography>
+            <Button
+              type="button"
+              variant="outlined"
+              fullWidth
+              sx={{ borderRadius: 2, mt: 1, fontWeight: 600 }}
+              onClick={() => setIsSignUp(s => !s)}
+            >
+              {isSignUp ? 'Sign in' : 'Create new account'}
+            </Button>
+          </Box>
+        </Box>
+      </Paper>
+    </Box>
+  );
+}

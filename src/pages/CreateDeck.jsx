@@ -1,10 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDecks } from '../hooks/useFlashcards'
-import { ArrowLeftIcon } from '@heroicons/react/24/outline'
-import Button from '../components/ui/Button'
-import Input from '../components/ui/Input'
-import Card, { CardContent } from '../components/ui/Card'
+import { ArrowLeft as ArrowLeftIcon } from '@mui/icons-material'
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Card,
+  CardContent,
+} from '@mui/material'
 
 export default function CreateDeck() {
   const navigate = useNavigate()
@@ -20,14 +25,11 @@ export default function CreateDeck() {
     setLoading(true)
     try {
       const { data, error } = await createDeck(title, description)
-      
       if (error) {
         console.error('Error creating deck:', error.message)
         alert('Error creating deck. Please try again.')
         return
       }
-      
-      // Navigate to the new deck
       navigate(`/deck/${data.id}`)
     } finally {
       setLoading(false)
@@ -35,69 +37,69 @@ export default function CreateDeck() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="mb-6">
+    <Box maxWidth={600} mx="auto">
+      <Box mb={6}>
         <Button
-          variant="ghost"
+          variant="text"
           onClick={() => navigate('/')}
-          className="mb-4"
+          startIcon={<ArrowLeftIcon />}
+          sx={{ mb: 2 }}
         >
-          <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to Dashboard
         </Button>
-        <h1 className="text-3xl font-bold text-gray-900">Create New Deck</h1>
-        <p className="text-gray-600 mt-2">
+        <Typography variant="h4" fontWeight={700} color="text.primary" gutterBottom>
+          Create New Deck
+        </Typography>
+        <Typography color="text.secondary" mb={2}>
           Start a new collection of flashcards. Pick a catchy title, maybe something like "Stuff I'll Forget Tomorrow."
-        </p>
-      </div>
-
+        </Typography>
+      </Box>
       <Card>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <Input
+          <Box component="form" onSubmit={handleSubmit}>
+            <TextField
               label="Deck Title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
+              fullWidth
+              margin="normal"
               placeholder="e.g., Japanese Vocabulary, Programming Concepts, Dad Jokes"
             />
-
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-                Description (Optional)
-              </label>
-              <textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Brief description of what this deck covers..."
-              />
-            </div>
-
-            <div className="flex gap-4">
+            <TextField
+              label="Description (Optional)"
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              multiline
+              fullWidth
+              margin="normal"
+              placeholder="Brief description of what this deck covers..."
+            />
+            <Box display="flex" gap={2} mt={2}>
               <Button
                 type="button"
-                variant="outline"
+                variant="outlined"
                 onClick={() => navigate('/')}
-                className="flex-1"
+                fullWidth
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                loading={loading}
-                disabled={!title.trim()}
-                className="flex-1"
+                variant="contained"
+                loading={loading ? 1 : 0}
+                disabled={!title.trim() || loading}
+                fullWidth
               >
                 Create Deck
               </Button>
-            </div>
-          </form>
+            </Box>
+          </Box>
         </CardContent>
       </Card>
-    </div>
+    </Box>
   )
 } 

@@ -1,6 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../services/supabase'
-import { ArrowRightOnRectangleIcon, HomeIcon, PlusIcon } from '@heroicons/react/24/outline'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Box from '@mui/material/Box'
+import { Logout, Home, Add } from '@mui/icons-material'
 
 export default function Navbar({ session }) {
   const navigate = useNavigate()
@@ -15,45 +21,53 @@ export default function Navbar({ session }) {
   }
 
   return (
-    <nav className="bg-white shadow-lg border-b border-gray-200">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-8">
-            <Link to="/" className="text-xl font-bold text-gray-900">
-              FlashCards
-            </Link>
-            <div className="flex items-center space-x-4">
-              <Link
-                to="/"
-                className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-              >
-                <HomeIcon className="h-4 w-4" />
-                <span>Dashboard</span>
-              </Link>
-              <Link
-                to="/create-deck"
-                className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors"
-              >
-                <PlusIcon className="h-4 w-4" />
-                <span>New Deck</span>
-              </Link>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-600">
-              {session?.user?.email}
-            </span>
-            <button
-              onClick={handleSignOut}
-              className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+    <AppBar position="static" color="default" elevation={1} sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box display="flex" alignItems="center" gap={4}>
+          <Typography
+            component={Link}
+            to="/"
+            variant="h6"
+            color="text.primary"
+            sx={{ textDecoration: 'none', fontWeight: 700 }}
+          >
+            FlashCards
+          </Typography>
+          <Box display="flex" alignItems="center" gap={2}>
+            <Button
+              component={Link}
+              to="/"
+              startIcon={<Home fontSize="small" />}
+              color="inherit"
+              sx={{ textTransform: 'none', fontWeight: 500 }}
             >
-              <ArrowRightOnRectangleIcon className="h-4 w-4" />
-              <span>Sign Out</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </nav>
+              Dashboard
+            </Button>
+            <Button
+              component={Link}
+              to="/create-deck"
+              startIcon={<Add fontSize="small" />}
+              variant="contained"
+              sx={{ textTransform: 'none', fontWeight: 500 }}
+            >
+              New Deck
+            </Button>
+          </Box>
+        </Box>
+        <Box display="flex" alignItems="center" gap={2}>
+          <Typography variant="body2" color="text.secondary">
+            {session?.user?.email}
+          </Typography>
+          <Button
+            onClick={handleSignOut}
+            startIcon={<Logout fontSize="small" />}
+            color="inherit"
+            sx={{ textTransform: 'none', fontWeight: 500 }}
+          >
+            Sign Out
+          </Button>
+        </Box>
+      </Toolbar>
+    </AppBar>
   )
 } 

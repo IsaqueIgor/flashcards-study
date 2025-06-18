@@ -1,9 +1,14 @@
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useDeck } from '../hooks/useFlashcards'
-import { ArrowLeftIcon, PlusIcon, BookOpenIcon } from '@heroicons/react/24/outline'
-import Button from '../components/ui/Button'
-import Card, { CardContent } from '../components/ui/Card'
+import { ArrowBack, Add, MenuBook } from '@mui/icons-material'
+import {
+  Box,
+  Typography,
+  Button,
+  IconButton,
+  Card,
+} from '@mui/material'
 import Modal, { ConfirmModal } from '../components/ui/Modal'
 import FlashcardForm from '../features/flashcards/FlashcardForm'
 import FlashcardList from '../features/flashcards/FlashcardList'
@@ -18,7 +23,7 @@ export default function DeckView() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null)
 
   const handleCardSubmit = async (formData) => {
-    const { error } = editingCard 
+    const { error } = editingCard
       ? await updateCard(editingCard.id, formData.front, formData.back, formData.tags)
       : await createCard(formData.front, formData.back, formData.tags)
 
@@ -27,7 +32,6 @@ export default function DeckView() {
       return
     }
 
-    // Reset form
     setShowCardForm(false)
     setEditingCard(null)
   }
@@ -49,77 +53,85 @@ export default function DeckView() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-xl text-gray-600">Loading deck...</div>
-      </div>
+      <Box display="flex" alignItems="center" justifyContent="center" py={12}>
+        <Typography variant="h6" color="text.secondary">Loading deck...</Typography>
+      </Box>
     )
   }
 
   if (!deck) {
     return (
-      <div className="text-center py-12">
-        <div className="text-xl text-gray-600">Deck not found</div>
-      </div>
+      <Box textAlign="center" py={12}>
+        <Typography variant="h6" color="text.secondary">Deck not found</Typography>
+      </Box>
     )
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="mb-6">
+    <Box maxWidth={800} mx="auto">
+      <Box mb={6}>
         <Button
-          variant="ghost"
+          variant="text"
           onClick={() => navigate('/')}
-          className="mb-4"
+          startIcon={<ArrowBack />}
+          sx={{ mb: 2 }}
         >
-          <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to Dashboard
         </Button>
-        
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">{deck.title}</h1>
+        <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+          <Box>
+            <Typography variant="h4" fontWeight={700} color="text.primary">
+              {deck.title}
+            </Typography>
             {deck.description && (
-              <p className="text-gray-600 mt-2">{deck.description}</p>
+              <Typography color="text.secondary" mt={1}>{deck.description}</Typography>
             )}
-            <p className="text-sm text-gray-500 mt-1">
+            <Typography variant="body2" color="text.secondary" mt={1}>
               {cards.length} card{cards.length !== 1 ? 's' : ''}
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <Button onClick={() => setShowCardForm(true)}>
-              <PlusIcon className="h-4 w-4 mr-2" />
+            </Typography>
+          </Box>
+          <Box display="flex" gap={2}>
+            <Button
+              onClick={() => setShowCardForm(true)}
+              startIcon={<Add />}
+              variant="contained"
+            >
               Add Card
             </Button>
             {cards.length > 0 && (
-              <Link to={`/study/${id}`}>
-                <Button variant="success">
-                  <BookOpenIcon className="h-4 w-4 mr-2" />
-                  Study
-                </Button>
-              </Link>
+              <Button
+                component={Link}
+                to={`/study/${id}`}
+                startIcon={<MenuBook />}
+                variant="outlined"
+                color="success"
+              >
+                Study
+              </Button>
             )}
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
 
       {/* Cards List */}
-      <ErrorBoundary>
-        <FlashcardList
-          cards={cards}
-          onEdit={handleEditCard}
-          onDelete={(cardId) => setShowDeleteConfirm(cardId)}
-        />
+      <FlashcardList
+        cards={cards}
+        onEdit={handleEditCard}
+        onDelete={(cardId) => setShowDeleteConfirm(cardId)}
+      />
 
-        {/* Add First Card Button for Empty Deck */}
-        {cards.length === 0 && (
-          <div className="text-center mt-6">
-            <Button onClick={() => setShowCardForm(true)}>
-              <PlusIcon className="h-4 w-4 mr-2" />
-              Add First Card
-            </Button>
-          </div>
-        )}
-      </ErrorBoundary>
+      {/* Add First Card Button for Empty Deck */}
+      {cards.length === 0 && (
+        <Box textAlign="center" mt={6}>
+          <Button
+            onClick={() => setShowCardForm(true)}
+            startIcon={<Add />}
+            variant="contained"
+          >
+            Add First Card
+          </Button>
+        </Box>
+      )}
 
       {/* Add/Edit Card Modal */}
       <Modal
@@ -150,6 +162,6 @@ export default function DeckView() {
         confirmText="Delete"
         variant="danger"
       />
-    </div>
+    </Box>
   )
 } 

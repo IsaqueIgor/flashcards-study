@@ -16,10 +16,6 @@ function App() {
     )
   }
 
-  if (!session) {
-    return <Login />
-  }
-
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
