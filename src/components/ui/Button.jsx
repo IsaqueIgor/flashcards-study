@@ -1,6 +1,6 @@
-import { forwardRef } from 'react'
+import React, { forwardRef } from 'react'
 
-const Button = forwardRef(({ 
+const ButtonInner = forwardRef(({
   children, 
   variant = 'primary', 
   size = 'md', 
@@ -46,6 +46,7 @@ const Button = forwardRef(({
   )
 })
 
-Button.displayName = 'Button'
+ButtonInner.displayName = 'Button'
 
+const Button = React.memo(ButtonInner)
 export default Button 

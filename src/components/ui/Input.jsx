@@ -1,6 +1,6 @@
-import { forwardRef } from 'react'
+import React, { forwardRef } from 'react'
 
-const Input = forwardRef(({ 
+const InputInner = forwardRef(({
   label, 
   error, 
   className = '', 
@@ -37,6 +37,7 @@ const Input = forwardRef(({
   )
 })
 
-Input.displayName = 'Input'
+InputInner.displayName = 'Input'
 
+const Input = React.memo(InputInner)
 export default Input 

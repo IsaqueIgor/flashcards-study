@@ -6,6 +6,7 @@ import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
 import Input from '../components/ui/Input'
 import { ConfirmModal } from '../components/ui/Modal'
+import ErrorBoundary from '../components/ErrorBoundary'
 
 export default function Dashboard() {
   const { decks, loading, deleteDeck } = useDecks()
@@ -61,9 +62,10 @@ export default function Dashboard() {
       </div>
 
       {/* Decks Grid */}
-      {filteredDecks.length === 0 ? (
-        <Card className="text-center py-12">
-          <BookOpenIcon className="mx-auto h-12 w-12 text-gray-400" />
+      <ErrorBoundary>
+        {filteredDecks.length === 0 ? (
+          <Card className="text-center py-12">
+            <BookOpenIcon className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">No decks found</h3>
           <p className="mt-1 text-sm text-gray-500">
             {searchTerm ? 'Try a different search term.' : 'Get started by creating a new deck.'}
@@ -125,7 +127,8 @@ export default function Dashboard() {
             </Card>
           ))}
         </div>
-      )}
+        )}
+      </ErrorBoundary>
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
+import ErrorBoundary from '../../components/ErrorBoundary'
 
 export default function FlashcardForm({ 
   initialData = { front: '', back: '', tags: '' },
@@ -25,9 +26,10 @@ export default function FlashcardForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="front" className="block text-sm font-medium text-gray-700 mb-2">
+    <ErrorBoundary>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="front" className="block text-sm font-medium text-gray-700 mb-2">
           Front (Question) *
         </label>
         <textarea
@@ -83,5 +85,6 @@ export default function FlashcardForm({
         </Button>
       </div>
     </form>
+  </ErrorBoundary>
   )
 } 
