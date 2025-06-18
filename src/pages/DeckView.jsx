@@ -7,6 +7,7 @@ import Card, { CardContent } from '../components/ui/Card'
 import Modal, { ConfirmModal } from '../components/ui/Modal'
 import FlashcardForm from '../features/flashcards/FlashcardForm'
 import FlashcardList from '../features/flashcards/FlashcardList'
+import ErrorBoundary from '../components/ErrorBoundary'
 
 export default function DeckView() {
   const { id } = useParams()
@@ -102,21 +103,23 @@ export default function DeckView() {
       </div>
 
       {/* Cards List */}
-      <FlashcardList 
-        cards={cards}
-        onEdit={handleEditCard}
-        onDelete={(cardId) => setShowDeleteConfirm(cardId)}
-      />
+      <ErrorBoundary>
+        <FlashcardList
+          cards={cards}
+          onEdit={handleEditCard}
+          onDelete={(cardId) => setShowDeleteConfirm(cardId)}
+        />
 
-      {/* Add First Card Button for Empty Deck */}
-      {cards.length === 0 && (
-        <div className="text-center mt-6">
-          <Button onClick={() => setShowCardForm(true)}>
-            <PlusIcon className="h-4 w-4 mr-2" />
-            Add First Card
-          </Button>
-        </div>
-      )}
+        {/* Add First Card Button for Empty Deck */}
+        {cards.length === 0 && (
+          <div className="text-center mt-6">
+            <Button onClick={() => setShowCardForm(true)}>
+              <PlusIcon className="h-4 w-4 mr-2" />
+              Add First Card
+            </Button>
+          </div>
+        )}
+      </ErrorBoundary>
 
       {/* Add/Edit Card Modal */}
       <Modal

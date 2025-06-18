@@ -1,4 +1,6 @@
-export default function Card({ children, className = '', hover = false, ...props }) {
+import React from 'react'
+
+function CardComponent({ children, className = '', hover = false, ...props }) {
   const baseClasses = 'bg-white rounded-lg shadow-md'
   const hoverClasses = hover ? 'hover:shadow-lg transition-shadow' : ''
   const classes = `${baseClasses} ${hoverClasses} ${className}`
@@ -9,27 +11,32 @@ export default function Card({ children, className = '', hover = false, ...props
     </div>
   )
 }
+export const Card = React.memo(CardComponent)
+export default Card // Default export for convenience
 
-export function CardHeader({ children, className = '', ...props }) {
+function CardHeaderComponent({ children, className = '', ...props }) {
   return (
     <div className={`px-6 py-4 border-b border-gray-200 ${className}`} {...props}>
       {children}
     </div>
   )
 }
+export const CardHeader = React.memo(CardHeaderComponent)
 
-export function CardContent({ children, className = '', ...props }) {
+function CardContentComponent({ children, className = '', ...props }) {
   return (
     <div className={`px-6 py-4 ${className}`} {...props}>
       {children}
     </div>
   )
 }
+export const CardContent = React.memo(CardContentComponent)
 
-export function CardFooter({ children, className = '', ...props }) {
+function CardFooterComponent({ children, className = '', ...props }) {
   return (
     <div className={`px-6 py-4 border-t border-gray-200 ${className}`} {...props}>
       {children}
     </div>
   )
-} 
+}
+export const CardFooter = React.memo(CardFooterComponent)

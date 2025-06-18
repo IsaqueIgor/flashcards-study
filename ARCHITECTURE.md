@@ -104,6 +104,19 @@ The application follows a modern, scalable React architecture with clear separat
 - **Server state**: Supabase real-time subscriptions
 - **Form state**: Controlled components with validation
 
+## Error Handling and Performance Strategies
+
+### Error Handling with Error Boundaries
+- **`ErrorBoundary` Component**: A dedicated React class component located at `src/components/ErrorBoundary.jsx` is implemented to catch JavaScript errors anywhere in its child component tree.
+- **Fallback UI**: When an error is caught, the `ErrorBoundary` displays a generic "Something went wrong." fallback UI, preventing the entire application from crashing. This allows other parts of the application to remain functional.
+- **Logging**: Errors caught by `componentDidCatch` are logged to the console, aiding in debugging.
+- **Application**: Key parts of the application, including the main route handling in `App.jsx` and data-displaying sections within pages like `Dashboard.jsx`, `DeckView.jsx`, and complex forms like `FlashcardForm.jsx`, are wrapped with `<ErrorBoundary>` to isolate and gracefully handle potential runtime errors.
+
+### Performance Optimization
+- **`React.memo`**: As an initial step towards optimizing rendering performance, `React.memo` is applied to reusable, presentational UI components found in `src/components/ui/` (e.g., `Button`, `Card`, `Input`).
+- **Benefit**: `React.memo` helps prevent unnecessary re-renders of these components if their props have not changed, even if their parent component re-renders. This can lead to a more responsive UI, especially in complex views or lists.
+- **Further Optimizations**: Additional strategies like `useMemo`, `useCallback`, and code-splitting (already noted for routing) can be considered for more complex scenarios.
+
 ## Benefits of This Architecture
 
 1. **Scalability**: Easy to add new features and components
@@ -115,8 +128,6 @@ The application follows a modern, scalable React architecture with clear separat
 ## Future Enhancements
 
 - **Store**: Add Redux Toolkit or Zustand for complex state
-- **Testing**: Jest + React Testing Library setup
+- **Testing**: Further expand Jest + React Testing Library setup (initial setup was attempted but blocked by environment issues).
 - **Storybook**: Component documentation and testing
-- **Error Boundaries**: Graceful error handling
-- **Performance**: React.memo, useMemo optimizations
 - **PWA**: Service workers for offline functionality 
